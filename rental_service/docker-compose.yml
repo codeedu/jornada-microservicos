@@ -1,0 +1,37 @@
+version: '3'
+services:
+  rentalapp:
+    build: .
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - rentalapp-mysql
+      - rentalapp-redis
+
+  rentalapp-mysql:
+    image: mysql:5.7.22
+    command: --innodb-use-native-aio=0
+    restart: always
+    ports:
+      - "3306"
+    volumes:
+      - "./.docker/dbdata:/var/lib/mysql"
+    environment:
+      MYSQL_DATABASE: rentalapp
+      MYSQL_ROOT_PASSWORD: root
+
+  rentalapp-nginx:
+    build: ./.docker/nginx
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - rentalapp
+
+
+  rentalapp-redis:
+    image: redis:alpine
+    expose:
+      - 6379
