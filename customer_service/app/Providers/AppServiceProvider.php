@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Customer;
+use App\Observers\KafkaCustomerObserver;
 use Illuminate\Support\ServiceProvider;
 use PHPEasykafka\Broker;
 use PHPEasykafka\BrokerCollection;
@@ -43,6 +45,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Customer::observe(KafkaCustomerObserver::class);
     }
 }

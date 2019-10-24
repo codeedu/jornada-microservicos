@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
+use App\Observers\KafkaProductObserver;
 use Illuminate\Support\ServiceProvider;
+use PHPEasykafka\Broker;
+use PHPEasykafka\BrokerCollection;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +17,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind("KafkaBrokerCollection", function () {
+            $broker = new Broker("kafka", "9092");
+            $kafkaBrokerCollection = new BrokerCollection();
+            $kafkaBrokerCollection->addBroker($broker);
+            return $kafkaBrokerCollection;
+        });
+
+        $this->app->bind("KafkaTopicConfig", function () {
+            return [
+                'topic' => [
+                    'auto.offset.reset' => 'largest'
+                ],
+                'consumer' => [
+                    'enable.auto.commit' => "true",
+                    'auto.commit.interval.ms' => "100",
+                    'offset.store.method' => 'broker'
+                ]
+            ];
+        });
     }
 
     /**
@@ -23,6 +45,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Product::observe(KafkaProductObserver::class);
     }
 }
