@@ -2,7 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Kafka\OrderHandler;
+use App\Kafka\CustomerHandler;
+use App\Kafka\ProductHandler;
 use Illuminate\Console\Command;
 use Psr\Container\ContainerInterface;
 
@@ -44,7 +45,7 @@ class KafkaConsumer extends Command
 
         $configs = [
             'consumer' => [
-                'enable.auto.commit' => "true",
+                'enable.auto.commit' => "false",
                 'auto.commit.interval.ms' => "100",
                 'offset.store.method' => 'broker',
                 'auto.offset.reset' => 'largest',
@@ -59,8 +60,13 @@ class KafkaConsumer extends Command
             $configs,
             $container
         );
-        $this->info("Consuming topic from kafka");
-        $consumer->consume(120*10000, [OrderHandler::class]);
+
+        $this->info("Consuming topic ".$topic." from kafka");
+        if($topic == "customers") {
+            $consumer->consume(120*10000, [CustomerHandler::class]);
+        } elseif ($topic == "products") {
+            $consumer->consume(120*10000, [ProductHandler::class]);
+        }
 
     }
 }

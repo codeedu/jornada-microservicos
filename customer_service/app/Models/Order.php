@@ -31,8 +31,15 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function delete()
+    {
+        $this->items()->delete();
+        return parent::delete();
     }
 
 
