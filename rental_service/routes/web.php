@@ -14,3 +14,5 @@
 Route::get('/', function () {
     return view('welcome');
 })->middleware('auth');
+
+Route::redirect('/nova/login/', '/', 301);

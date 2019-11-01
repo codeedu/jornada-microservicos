@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: customer-job-consumer
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: jornada-customer
+          image: wesleywillians/customer_jornada:latest
+          imagePullPolicy: Always
+          command: ["php", "artisan","kafka:consume","orders","order-group"]
+          envFrom:
+            - configMapRef:
+                name: customer-app-conf
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: customer-mysql-pass
+                  key: password
+          volumeMounts:
+            - name: customer-app-conf
+              subPath: .env
+              mountPath: /var/www/.env
+
+      volumes:
+        - name: customer-app-conf
+          configMap:
+            name: customer-app-conf
+            items:
+              - key: env
+                path: .env

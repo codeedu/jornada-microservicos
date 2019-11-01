@@ -36,6 +36,8 @@ class Product extends Resource
         'name'
     ];
 
+    public static $displayInNavigation = false;
+
     /**
      * Get the fields displayed by the resource.
      *

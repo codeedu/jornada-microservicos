@@ -7,6 +7,9 @@ services:
     depends_on:
       - productapp-mysql
       - productapp-redis
+    ports:
+      - "9000:80"
+    # command: php-fpm; nginx -g 'daemon off;'
 
   productapp-mysql:
     image: mysql:5.7.22

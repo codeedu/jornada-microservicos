@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: customer-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customer-app
+
+  template:
+    metadata:
+      labels:
+        app: customer-app
+    spec:
+      containers:
+      - name: jornada-customer
+        image: wesleywillians/customer_jornada:latest
+        imagePullPolicy: Always
+#        command: ["/bin/sh", "-c", "ln -s /var/www /usr/share/nginx;  php-fpm;"]
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: customer-app-conf
+        env:
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: customer-mysql-pass
+              key: password
+        volumeMounts:
+        - name: customer-app-conf
+          subPath: .env
+          mountPath: /var/www/.env  
+      
+      volumes:
+      - name: customer-app-conf
+        configMap:
+          name: customer-app-conf
+          items:
+            - key: env
+              path: .env
