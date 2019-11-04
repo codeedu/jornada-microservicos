@@ -8,7 +8,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: jornada-rental
-          image: wesleywillians/jornada_rental:latest
+          image: wesleywillians/rental_jornada:latest
           imagePullPolicy: Always
           command: ["php", "artisan","kafka:consume","products","product-group"]
           envFrom:

@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: jornada-product
-        image: wesleywillians/jornada_product:latest
+        image: wesleywillians/product_jornada:latest
         imagePullPolicy: Always
 #        command: ["/bin/sh", "-c", "ln -s /var/www /usr/share/nginx;  php-fpm;"]
         ports:

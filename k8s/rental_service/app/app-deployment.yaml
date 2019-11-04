@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: jornada-rental
-        image: wesleywillians/jornada_rental:latest
+        image: wesleywillians/rental_jornada:latest
         imagePullPolicy: Always
 #        command: ["/bin/sh", "-c", "ln -s /var/www /usr/share/nginx;  php-fpm;"]
         ports:
